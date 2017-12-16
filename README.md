@@ -1,4 +1,4 @@
-## exercises solutions for sicp that runs correctly on scheme compiler
+## Exercises solutions for sicp that runs correctly in scheme compiler
 
 - The whole book can be accessed [here](https://mitpress.mit.edu/sicp/full-text/book/book.html)
  
