@@ -220,3 +220,42 @@
 
 ; exercise 1.18
 ; 上述方程的iterative process
+; the same as 1.16: we double the x if y is even
+; this procedure is theta(log(n)) in steps
+; and theta(1) in spaces
+(define (better-multiply x y)
+  (define (multi-iter x y product)
+    (cond ((= y 0) product)
+      ((even y) (multi-iter (double x) (halve y) product))
+      (else (multi-iter x (- y 1) (+ x product)))
+    )
+  )
+  (multi-iter x y 0)
+)
+
+; Exercise 1.19
+; log(n) steps of fibonacci
+; we can concider it as a single dimension martix multiply
+; take (a, b) as a (2,1) sahpe of vector, with initial value (1,0)
+; and (p, q) as a (1,2) verctor, with init value (0,1)
+; notation: a[n]/b[n] refers to a/b in group n
+; a[n] = a[n-1] + b[n-1] = 0 * a[n-1] + 1 * (a[n-1] + b[n-1]) = p*a[n-1] + q*(a[n-1]+b[n-1])
+; b[n] = a[n-1] = 0* b[n-1] + 1 * a[n-1] = p*b[n-1] + q*a[n-1]
+; we need a new pair of (p', q') that makes both
+; a[2n] = P'*a[n] +q'*(a[n] + b[n])
+; b[2n] = p'*b[n]+q'a[n]
+; where (p', q') is transformed from the previous (p,q)
+; that has the same result as applying the tranform twice
+; if we define the transform as Tpq
+; we have Tpq(Tpq(a,b)) = Tp'q'(a,b)
+; => Tpq(p*a+q*(a+b), p*b+q*a) = Tp'q'(a,b)
+; => (p*(p*a+q*(a+b))+q*(p*a+q*(a+b)+p*b+q*a), p*(p*b+q*a)+q*(p*a+q*(a+b))) = Tp'q'(a,b)
+; => we can find that p'= p*p+q*q, and q' = q*q + 2*p*q 
+(define (fast-fib n)
+  (define (fib-iter a b p q count)
+    (cond ((= count 0) b)
+      ((even count) (fib-iter a b (+ (* p p) (* q q)) (+ (* q q) (* 2 p q)) (/ count 2)))
+      (else (fib-iter (+ (* p a) (* q (+ a b))) (+ (* p b) (* q a)) p q (- count 1)))
+    ))
+  (fib-iter 1 0 0 1 n)
+)
