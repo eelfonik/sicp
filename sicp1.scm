@@ -259,3 +259,79 @@
     ))
   (fib-iter 1 0 0 1 n)
 )
+
+; Exercise 1.21
+; with theta(square-root n) steps
+(define (smallest-divisor x)
+  (define (find-divisor num divisor)
+      (cond ((> (square divisor) num) num)
+        ((divided num divisor) divisor)
+        (else (find-divisor num (+ divisor 1)))
+      )
+  )
+  (define (divided a b)
+    (= (remainder a b) 0))
+  (find-divisor x 2)
+)
+
+(define (prime? n)
+  (= (smallest-divisor n) n))
+
+; Exercise 1.22
+; note: the following 3 funcs provided in the book are not correct
+; `display` does not return anything (in fact it's `Unspecified return value`)
+; So inside `start-prime-test` procedure, we need to return false (`#f`) if the number is not prime
+; and inside `report-prime`, we need to return true (`#t`)
+; otherwise the `if (timed-prime-test n)` will always execute the consequent, and will never reach alternative 
+(define (timed-prime-test n)
+  (newline)
+  (display n)
+  (start-prime-test n (runtime)))
+
+(define (start-prime-test n start-time)
+  (if (prime? n)
+      (report-prime (- (runtime) start-time))
+      #f
+    ))
+
+; we don't need return `#t` here
+; but I don't like the `Unspecified return value` message...
+(define (report-prime elapsed-time)
+  (display " *** ")
+  (display elapsed-time)
+  #t
+)
+
+;prime in range
+;find the first 3 smallest primes that larger than the start point
+(define (search-for-primes start-range)
+  (define (search-for-primes-iter n counter)
+    (if (> counter 0)
+        (if (timed-prime-test n)
+            (search-for-primes-iter (+ n 2) (- counter 1))
+            (search-for-primes-iter (+ n 1) counter)
+        )
+        " COMPLETE "
+    )
+  )
+  (search-for-primes-iter start-range 3)
+)
+
+; Exercise 1.23
+; faster `smallest-divisor`
+; if a num cannpt be divided by 2, then we don't need to test any even divisor
+(define (smallest-divisor n)
+	(define (find-divisor num divisor)
+					(cond ((> (square divisor) num) num)
+						((= (remainder num divisor) 0) divisor)
+						(else (find-divisor num (addDivisor divisor)))
+					)
+	)
+	(define (addDivisor divisor)
+		(if (= divisor 2)
+			(+ divisor 1)
+			(+ divisor 2)))
+	(find-divisor n 2)
+)
+
+; Exercise 1.24
