@@ -193,7 +193,7 @@
 ; In general, the technique of defining an invariant quantity that remains unchanged from state to state is a powerful way to think about the design of iterative algorithms
 
 ; 如果是偶数就先把base做个二次方。。。 simple
-(define (exp1 b n)
+(define (fast-exp b n)
   (define (exp_iter base product counter)
     (cond ((= counter 0) product)
       ((even counter) (exp_iter (square base) product (/ counter 2)))
@@ -322,10 +322,10 @@
 ; if a num cannpt be divided by 2, then we don't need to test any even divisor
 (define (smallest-divisor n)
 	(define (find-divisor num divisor)
-					(cond ((> (square divisor) num) num)
-						((= (remainder num divisor) 0) divisor)
-						(else (find-divisor num (addDivisor divisor)))
-					)
+		(cond ((> (square divisor) num) num)
+			((= (remainder num divisor) 0) divisor)
+			(else (find-divisor num (addDivisor divisor)))
+		)
 	)
 	(define (addDivisor divisor)
 		(if (= divisor 2)
@@ -335,3 +335,25 @@
 )
 
 ; Exercise 1.24
+(define (expmod base exp m)
+  (cond ((= exp 0) 1)
+		((even? exp) (remainder (square (expmod base (/ exp 2) m)) m))
+		(else (remainder (* base (expmod base (- exp 1) m)) m))
+	)
+)
+
+(define (fermat-test n)
+  (define (try-it a)
+    (= (expmod a n n) a))
+	(try-it (+ 1 (random (- n 1))))
+)
+
+(define (fast-prime? n times)
+  (cond ((= times 0) true)
+		((fermat-test n) (fast-prime? n (- times 1)))
+		(else false)
+	)
+)
+
+(define (prime? n)
+	(fast-prime? n 100))
