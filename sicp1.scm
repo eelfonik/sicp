@@ -235,7 +235,7 @@
 
 ; Exercise 1.19
 ; log(n) steps of fibonacci
-; we can concider it as a single dimension martix multiply
+; we can consider it as a single dimension martix multiply
 ; take (a, b) as a (2,1) sahpe of vector, with initial value (1,0)
 ; and (p, q) as a (1,2) verctor, with init value (0,1)
 ; notation: a[n]/b[n] refers to a/b in group n
@@ -319,7 +319,7 @@
 
 ; Exercise 1.23
 ; faster `smallest-divisor`
-; if a num cannpt be divided by 2, then we don't need to test any even divisor
+; if a num cannot be divided by 2, then we don't need to test any even divisor
 (define (smallest-divisor n)
 	(define (find-divisor num divisor)
 		(cond ((> (square divisor) num) num)
@@ -335,6 +335,9 @@
 )
 
 ; Exercise 1.24
+; the procedure expmod computes the exponential(exp) of a number(base) modulo another number(n)
+; 如果是0次方，则任何数的0次方都是1，而1除以任何数的余数都是1
+; 如果是偶数次方，则可以调用平方(square), 直接把次方数除2，可以大幅减少运算步数
 (define (expmod base exp m)
   (cond ((= exp 0) 1)
 		((even? exp) (remainder (square (expmod base (/ exp 2) m)) m))
@@ -342,6 +345,7 @@
 	)
 )
 
+; randomly take a number between 1 and (n-1) to test
 (define (fermat-test n)
   (define (try-it a)
     (= (expmod a n n) a))
@@ -357,3 +361,62 @@
 
 (define (prime? n)
 	(fast-prime? n 100))
+
+
+; Exercise 1.27
+; Demonstrate that the Carmichael numbers really DO fool the Fermat test
+; instead of randomly choose some number, we need to test every a that is smaller than n
+(define (exhausted-fermat-test n)
+	(define (carmichel-test-iter a n)
+		(cond ((and (= (expmod a n n) a) (< a n)) (carmichel-test-iter (+ a 1) n))
+			((= a n) true)
+			(else false)
+		)
+	)
+	(carmichel-test-iter 1 n)
+)
+
+; Exercise 1.28
+; Miller-Rabin test (that cannot be fooled by Carmichael numbers)
+; The remainder of a number a when divided by n is also referred to as the remainder of a modulo n
+; or simply as a modulo n. 即 a/n 的余数
+
+; if n is a prime number and a is any positive integer less than n,
+; then a raised to the (n - 1)st power is congruent to 1 modulo n.
+; To test the primality of a number n by the Miller-Rabin test,
+; we pick a random number a<n and raise a to the (n - 1)st power modulo n using the expmod procedure.
+; However, whenever we perform the squaring step in expmod,
+; we check to see if we have discovered a "nontrivial square root of 1 modulo n",
+; that is, a number not equal to 1 or n - 1 whose square is congruent to 1 modulo n.
+; It is possible to prove that if such a nontrivial square root of 1 exists, then n is not prime.
+; It is also possible to prove that if n is an odd number that is not prime, then,
+; for at least half the numbers a<n, computing a[n-1] in this way will reveal a nontrivial square root of 1 modulo n.
+(define (nontrivial-number n m)
+  (cond ((= n 1) false)
+    ((= n (- m 1)) false)
+    ; whose square is congruent to 1 modulo n
+    (else (= (remainder (square n) m) 1))
+  )
+)
+
+(define (miller-expmod base exp m)
+  (cond ((= exp 0) 1)
+    ((even? exp)
+      ; calculate the number that will be used to do the square
+      ; and check if THIS number is a nontrivial square root of 1 modulo n
+      (if (nontrivial-number (miller-expmod base (/ exp 2) m) m)
+        0
+        (remainder (square (miller-expmod base (/ exp 2) m)) m)))
+		(else (remainder (* base (miller-expmod base (- exp 1) m)) m))
+	)
+)
+
+(define (miller-rabin-test n)
+  (define (test-iter a n)
+    (cond ((= a 0) true)
+      ((= (miller-expmod a (- n 1) n) 1) (try-iter (- a 1) n))
+      (else false)
+    )
+  )
+  (test-iter (- n 1) n)    
+)
