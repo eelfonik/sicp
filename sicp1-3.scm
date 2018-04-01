@@ -84,21 +84,30 @@
 
 ; Exercise 1.32
 ; recursive higher-order procedure to represent sigma or product or any other operator
+; 书里把这个procedure叫做 'accumulate'
 (define (operate-range operator default-value term next a b)
   (if (> a b)
     default-value
-    (operator (term a) (operate-range operator term next (next a) b)))
+    (operator (term a) (operate-range operator default-value term next (next a) b)))
 )
 ; then product can be represent as
 (define (product term next a b)
-  (define (operator x)
-    (* x x))
+  (define (operator x y)
+    (* x y))
   (operate-range operator 1 term next a b))
 ; and the sigma can be represent as
 (define (sigma term next a b)
-  (define (operator x)
-    (+ x x))
+  (define (operator x y)
+    (+ x y))
   (operate-range operator 0 term next a b))
+
+(define (sum-square a b)
+  (define (term x)
+    (* x x))
+  (define (next x)
+    (+ 1 x))
+  (sigma term next a b)
+)
 
 ; iterative hight-order procedure
 (define (operate-range operator default-value term next a b)
@@ -108,4 +117,55 @@
       (operate-range-iter (next a) (operator result (term a))))
   )
   (operate-range-iter a default-value)
+)
+
+; Exercise 1.33
+; further generalize the above procedure by introducing a filter
+; that accumulate only the values between a range and satisfy the filter
+(define (filtered-accumulate operator default-value term next a b filter)
+  (if (> a b) default-value
+    (if (filter a)
+      (operator (term a) (filtered-accumulate operator default-value term next (next a) b filter))
+      (filtered-accumulate operator default-value term next (next a) b filter))
+  )
+  ; or the iterative version
+  ; (define (accu-filter-iter result a)
+  ;   (if (> a b)
+  ;     result
+  ;     (accu-filter-iter ((if (filter a)
+  ;       (operator result (term a))
+  ;       result)) (next a)))
+  ; )
+  ; (accu-filter-iter default-value a)
+)
+
+; then 1.the sum of the squares of the prime numbers in the interval a to b
+; assume there's already a prime? procedure from 1-2
+(define (sum-prime-square a b)
+  (define (operator x y)
+    (+ x y))
+  (define (term x)
+    (* x x))
+  (define (next x)
+    (+ x 1))
+  (filtered-accumulate operator 0 term next a b prime?)
+)
+
+; then 2.the product of all the positive integers less than n that are relatively prime to n
+(define (gcd x y)
+  (cond ((< x y) (gcd y x))
+    ((= y 0) x)
+    (else (gcd y (remainder x y)))
+  )
+)
+(define (product-prime-to-n n)
+  (define (operator x y)
+    (* x y))
+  (define (term x) x)
+  (define (next x)
+    (+ x 1))
+  (define (filter x)
+    (= (gcd x n) 1)
+  )
+  (filtered-accumulate operator 1 term next 1 n filter)
 )
