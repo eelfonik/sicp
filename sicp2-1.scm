@@ -141,9 +141,53 @@
 
 ; Exercise 2.5
 ; pairs of nonnegative integers
-(define (integer a b)
- ()
+(define (expo x n)
+  (define (expo-iter x n res)
+    (if (= n 0)
+      res
+      (expo-iter x (- n 1) (* res x)))
+  )
+  (expo-iter x n 1)
 )
+(define (largest-pow-of x res)
+  (define (pow-iter x res pow)
+    (if (= 0 (remainder res x))
+      (pow-iter x (/ res x) (+ pow 1))
+      pow
+    )
+  )
+  (pow-iter x res 0)
+)
+(define (int-cons a b)
+  (* (expo 2 a) (expo 3 b))
+)
+(define (int-car z)
+  (largest-pow-of 2 z)
+)
+(define (int-cdr z)
+  (largest-pow-of 3 z)
+)
+
+; Exercise 2.6
+(define zero (lambda (f) (lambda (x) x)))
+(define (add-1 n)
+  (lambda (f) (lambda (x) (f ((n f) x))))
+)
+; if we evaluate (add-1 zero)
+; (lambda (f) (lambda (x) (f ((lambda (x) x) x))))
+; (lambda (f) (lambda (x) (f x)))
+
+; It means that a number N can be represented
+; as applying f to the inner most x N times
+(define one (lambda (f) (lambda (x) (f x))))
+(define two (lambda (f) (lambda (x) (f (f x)))))
+
+; then the add a b should be
+; apply the f a times to the "value" that obtained by 
+; applying the f b times to the inner most x
+(define (church-add a b)
+  (lambda (f) (lambda (x) ((a f) ((b f) x)))))
+
 
 
 
