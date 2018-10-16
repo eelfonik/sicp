@@ -140,7 +140,7 @@
 )
 
 ; Exercise 2.5
-; pairs of nonnegative integers
+; pairs of non-negative integers
 (define (expo x n)
   (define (expo-iter x n res)
     (if (= n 0)
@@ -169,6 +169,7 @@
 )
 
 ; Exercise 2.6
+; Church numerals
 (define zero (lambda (f) (lambda (x) x)))
 (define (add-1 n)
   (lambda (f) (lambda (x) (f ((n f) x))))
@@ -188,6 +189,78 @@
 (define (church-add a b)
   (lambda (f) (lambda (x) ((a f) ((b f) x)))))
 
+; Exercise 2.7
+; interval constructor & selectors
+; an abstract object that has two endpoints: a lower bound and an upper bound
+
+(define (make-interval a b)
+  (cons a b))
+
+(define (upper-bound z)
+  (max (car z) (cdr z)))
+(define (lower-bound z)
+  (min (cdr z) (car z)))
+
+; Exercise 2.8
+; sub-interval
+(define (sub-interval x y)
+  (make-interval (- (lower-bound x) (upper-bound y))
+                  (- (upper-bound x) (lower-bound y)))
+)
+; or using the existing add-interval, defined as following:
+(define (add-interval x y)
+  (make-interval (+ (lower-bound x) (lower-bound y)) (+ (upper-bound x) (upper-bound y)))
+)
+; then the sub-interval can be represented as:
+(define (sub-interval x y)
+  (add-interval x (make-interval (- (lower-bound y)) (- (upper-bound y))))
+)
+
+; Exercise 2.9
+; width of interval shows the uncertainty of number specified by the interval
+; prove that for add/substract, the width of the combination is a function only related with the width of its intervals
+; whereas it's not the case for multiply/division
+(define (width-interval z)
+  (/ (- (upper-bound z) (lower-bound z)) 2)
+)
+; assume for add-interval
+; (as we showed above, the sub-interval is just another form of add-interval, so same for sub-interval)
+; replace z by (add-interval x y)
+(/ (- (upper-bound (add-interval x y)) (lower-bound (add-interval x y))) 2)
+; apply the def of add-interval
+(/ (- (upper-bound (make-interval (+ (lower-bound x) (lower-bound y)) (+ (upper-bound x) (upper-bound y)))) (lower-bound (make-interval (+ (lower-bound x) (lower-bound y)) (+ (upper-bound x) (upper-bound y))))) 2)
+; apply the upper-bound & lower-bound def:
+(/ (- (+ (upper-bound x) (upper-bound y)) (+ (lower-bound x) (lower-bound y))) 2)
+; which can be transformed as:
+(+ (/ (- (upper-bound x) (lower-bound x)) 2) (/ (- (upper-bound y) (lower-bound y)) 2))
+; which is equal to:
+(+ (width-interval x) (width-interval y))
+
+; But for multiply/division
+(/ (- (upper-bound (mul-interval x y)) (lower-bound (mul-interval x y))) 2)
+; p1 = lower X * lower Y, p2 = lower X * upper Y, p3 = upper X * lower Y, p4 = upperX * upper Y
+(/ (- (upper-bound (make-interval (min p1 p2 p3 p4) (max p1 p2 p3 p4))) (lower-bound (make-interval (min p1 p2 p3 p4) (max p1 p2 p3 p4)))) 2)
+(/ (- (max p1 p2 p3 p4) (min p1 p2 p3 p4)) 2)
+; which is not linear to (width-interval x) or (width-interval y)
+
+; Exercise 2.10
+; handle division with zero value
+(define (mul-interval x y)
+  (let ((p1 (* (lower-bound x) (lower-bound y)))
+        (p2 (* (lower-bound x) (upper-bound y)))
+        (p3 (* (upper-bound x) (lower-bound y)))
+        (p4 (* (upper-bound x) (upper-bound y))))
+    (make-interval (min p1 p2 p3 p4)
+                   (max p1 p2 p3 p4))))
+
+(define (div-interval x y)
+  (let ((upper (upper-bound y))
+        (lower (lower-bound y)))
+    ((if (or (= upper 0) (= lower 0))
+          #f
+          (mul-interval x 
+            (make-interval (/ 1.0 upper)
+                        (/ 1.0 lower)))))))
 
 
 
