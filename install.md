@@ -26,7 +26,7 @@ sudo ln -s /usr/local/lib/mit-scheme-i386/mit-scheme /usr/bin/scheme
 sudo ln -s /usr/local/lib/mit-scheme-x86-64/mit-scheme /usr/local/bin/scheme
 ```
 
-Then simply type ‘scheme’ in terminal to use
+Then simply type `scheme` in terminal to use
 
 ### Quite scheme with either of those 2:
 Two Scheme procedures that you can call.
