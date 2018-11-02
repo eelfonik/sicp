@@ -8,4 +8,4 @@
 
 
 ### The learning notes
-[This note](https://www.evernote.com/l/ALg3JXRcBFtGzKpt946bCz0IqpueYj-SI2M) is taken along when going through the book. Contains some Chinese, don't be scared.
+[This note](notes.md) is taken along when going through the book. Contains some Chinese, don't be scared.
