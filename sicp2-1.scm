@@ -244,7 +244,10 @@
 ; which is not linear to (width-interval x) or (width-interval y)
 
 ; Exercise 2.10
-; handle division with zero value
+; define multiply & division of intervals
+; handle division with span zero
+; N.b. a span zero means the lower-bound is less or equal to 0, and the upper-bound is more or equal to 0
+; then the range of interval "spans" or "crossed" the value 0
 (define (mul-interval x y)
   (let ((p1 (* (lower-bound x) (lower-bound y)))
         (p2 (* (lower-bound x) (upper-bound y)))
@@ -256,7 +259,8 @@
 (define (div-interval x y)
   (let ((upper (upper-bound y))
         (lower (lower-bound y)))
-    ((if (or (= upper 0) (= lower 0))
+    ((if (and (>= (upper-bound y) 0)
+              (<= (lower-bound y) 0))
           #f
           (mul-interval x 
             (make-interval (/ 1.0 upper)

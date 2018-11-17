@@ -346,8 +346,12 @@ Data can be defined by some collection of **constructors** and **selectors**, to
 
 (define (cdr z) (z 1))
 ```
-样我们的*constructor*返回一个procedure, 所以在使用*selectors*时，例如`(car (cons 2 3))`, 因为`(cons 2 3)`返回的是一个名为dispatch的procedure, who takes a simple param `m`, and return value accordingly. 而我们指定car为*向这个返回的procedure传入0*， 则根据上面dispatch的定义，我们会得到`x`，同理`cdr`会得到`y`.
+这样我们的*constructor*返回一个procedure, 所以在使用*selectors*时，例如`(car (cons 2 3))`, 因为`(cons 2 3)`返回的是一个名为dispatch的procedure, who takes a simple param `m`, and return value accordingly. 而我们指定car为*向这个返回的procedure传入0*， 则根据上面dispatch的定义，我们会得到`x`，同理`cdr`会得到`y`.
+
+`m`在此处可以是任何boolean的条件。
 
 用procedure来represent data这种编程方式，被称作**message passing**，我们可以很容易从这一方式里得到我们的model (cool…).
+
+
 
 
