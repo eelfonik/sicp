@@ -28,7 +28,7 @@ sudo ln -s /usr/local/lib/mit-scheme-x86-64/mit-scheme /usr/local/bin/scheme
 
 Then simply type `scheme` in terminal to use
 
-### Quite scheme with either of those 2:
+### Quit scheme with either of those 2:
 Two Scheme procedures that you can call.
 - The first is to evaluate `(exit)`, which will **halt** the Scheme system, after first requesting confirmation. Any information that was in the environment is lost, so this should not be done lightly.
 - The second procedure **suspends** Scheme; when this is done you may later restart where you left off. Unfortunately this is not possible in all operating systems; currently it works under unix versions that support job control (i.e. all of the unix versions for which we distribute Scheme). To suspend Scheme, evaluate `(quit)`

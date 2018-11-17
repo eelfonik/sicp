@@ -3,9 +3,9 @@
 - 习题参考答案： http://community.schemewiki.org/?sicp-solutions
 - the html5 version http://sarabander.github.io/sicp/html/index.xhtml
 
-# 1. Abstraction of procedure
+# 1. Abstraction of **procedure**
 Advance of Lisp:
-represent **procedures** as **data**
+represent *procedures* as *data*
 
 ## How to define sth
 ### value
@@ -304,6 +304,50 @@ The significance of *higher-order procedures* is that they enable us to represen
 * As a way to abstract and express more general patterns, procedures can be *argument*, *returned value* or *general method*. They are first-class.
 
 
+# 2. Abstraction of **data**
+##### Why we need compound data ?
+- higher conceptual level of data
+- increase the **modularity** => separate the *representation* of data & the *use* of data
 
+##### key idea of providing a glue to form compound data:
+- *closure*
+- compound data objects serve as conventional *interfaces* => 被抽象好的data objects可以作为上一层program的基本操作，即每一层都只需要知道它可以使用的操作，而不需要关心implementation的细节，因此这些data objects可以被看作是一个interface, 例如在计算有理数时的结构，最上层使用rational number的时候，只需要知道哪些*rational number*可以被拿来用，同时可用的*methods*有哪些就行，至于有理数如何构建，add/sub如何实现，都不用在意：
+![data-abstruction](./assets/abstraction-data01.png)
+
+**wishful thinking** => if sth is not there, let’s assume it’s already there 👀
+
+The single compound-data primitive `pair`, implemented by the procedures `cons` (*constructor*), `car`(*Contents of Address part of Register*), and `cdr`(*Contents of Decrement part of Register*), is the only glue we need. Data objects constructed from pairs are called **list-structured data**.
+
+##### 关于程序设计的Gotcha:
+- 在构建有理数时，我们可以把两个部分（numerator and denominator）除以最大公约数（gcd）这一步骤放在constructor (`make-rat`) 里，也可以放在selector (`numer`/`denom`) 里。如何放置则完全取决于之后我们想要如何使用这个东西，例如之后我们如果需要频繁access有理数的分子/分母，那么最好放在constructor里，这样就不用每次access(select)的时候再计算一遍。
+- 而data abstraction的好处是，如上图所示，每一层的应用都跟下一层的具体细节无关，因此如果在设计`make-rat`/`numer`/`denom`时我们还无法确定到底把dived by gcd这步放在哪里，也完全没关系，随便选一个，之后修改时也只需要修改这层，而其他应用这层的program都不需要改动，即data abstration gives us the ability to defer the decision later.
+
+#### So, what is data?
+Data can be defined by some collection of **constructors** and **selectors**, together with **specified conditions** that there procedures must fulfill, in order to be a validated representation.
+
+*Ex*: 在构建有理数的data时，我们有constructor => `(cons a b)`, 以及selectors (numer => `(car x)`, denom => `(cdr x)`), 则一个有效的有理数data必须满足的specified conditions（约束条件）是，`(numer x)/(denom x) = a / b`
+
+以这个条件来思考，我们使用的`cons`, `car`, `cdr`也是一组只需要满足特定条件的collection: 
+```scheme
+; Amazing example to explain the "data"
+; by demonstrate how we can define a data type
+; using only procedures
+(define (cons x y)
+  (define (dispatch m)
+    (cond ((= m 0) x)
+          ((= m 1) y)
+          (else (error "aguments is neither 0 or 1---CONS" m))
+    )
+  )
+  ; note here we return a procedure called `dispatch` in constructor
+)
+
+(define (car z) (z 0))
+
+(define (cdr z) (z 1))
+```
+样我们的*constructor*返回一个procedure, 所以在使用*selectors*时，例如`(car (cons 2 3))`, 因为`(cons 2 3)`返回的是一个名为dispatch的procedure, who takes a simple param `m`, and return value accordingly. 而我们指定car为*向这个返回的procedure传入0*， 则根据上面dispatch的定义，我们会得到`x`，同理`cdr`会得到`y`.
+
+用procedure来represent data这种编程方式，被称作**message passing**，我们可以很容易从这一方式里得到我们的model (cool…).
 
 
