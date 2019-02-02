@@ -184,8 +184,8 @@
 (define two (lambda (f) (lambda (x) (f (f x)))))
 
 ; then the add a b should be
-; apply the f a times to the "value" that obtained by 
-; applying the f b times to the inner most x
+; apply the `f` a times to the "value" that obtained by 
+; applying the `f` b times to the inner most x
 (define (church-add a b)
   (lambda (f) (lambda (x) ((a f) ((b f) x)))))
 
@@ -261,10 +261,73 @@
         (lower (lower-bound y)))
     ((if (and (>= (upper-bound y) 0)
               (<= (lower-bound y) 0))
-          #f
+          (error "Error: The denominator should not span 0.")
           (mul-interval x 
             (make-interval (/ 1.0 upper)
                         (/ 1.0 lower)))))))
+
+; Exercise 2.11
+; rewrite mul-interval
+; break multi-interval to 9 cases by testing the signal of endpoint of interval
+; only one of which needs more than 2 multiplications
+; possible paris:
+; [x1- y1-] [x2- y2-] => [y1*y2 x1*x2]
+; [x1- y1-] [x2- y2+] => [x1*y2 x2*x1]
+; [x1- y1-] [x2+ y2+] => [x1*y2 x2*y1]
+
+; [x1- y1+] [x2- y2-] => [x2*y1 x1*x2]
+; [x1- y1+] [x2- y2+] => [x1*y2 | x2*y1 x1*x2 | y1*y2]
+; [x1- y1+] [x2+ y2+] => [x1*y2 y1*y2]
+
+; [x1+ y1+] [x2- y2-] => [y1*x2 x1*y2]
+; [x1+ y1+] [x2- y2+] => [y1*x2 y1*y2]
+; [x1+ y1+] [x2+ y2+] => [x1*x2 y1*y2]
+(define (test-signal testX x testY y)
+  (and (testX x) (testY y))
+)
+
+(define (multi-interval x y)
+  (let ((lowerX (lower-bound x))
+          (lowerY (lower-bound y))
+          (upperX (upper-bound x))
+          (upperY (upper-bound y))  
+         (allbelow (lambda (n) (and (< (lower-bound n) 0) (< (upper-bound n) 0))))
+         (allup (lambda (n) (and (> (lower-bound n) 0) (> (upper-bound n) 0))))
+         (diff (lambda (n) (and (< (lower-bound n) 0) (> (upper-bound n) 0))))
+        )
+      (cond ((test-signal allbelow x allbelow y) (make-interval (* upperX upperY) (* lowerX lowerY)))
+        ((test-signal allbelow x diff y) (make-interval (* lowerX upperY) (* lowerY lowerX)))
+        ((test-signal allbelow x allup y) (make-interval (* lowerX upperY) (* lowerY upperX)))
+
+        ((test-signal diff x allbelow y) (make-interval (* lowerX lowerY) (* lowerY upperX)))
+        ((test-signal diff x diff y) (make-interval (min (* lowerX upperY) (* lowerY upperX)) (max (* lowerX lowerY) (* upperX upperY))))
+        ((test-signal diff x allup y) (make-interval (* lowerX upperY) (* upperX upperY)))
+
+        ((test-signal allup x allbelow y) (make-interval (* upperX lowerY) (* lowerX upperY)))
+        ((test-signal allup x diff y) (make-interval (* upperX lowerY) (* upperX upperY)))
+        ((test-signal allup x allup y) (make-interval (* lowerX lowerY) (* upperX upperY)))
+  )
+)
+
+
+; Exercise 2.12
+; percentage tolerance
+(define (make-center-percent c p)
+  (let ((d (/ (* c p) 100.0)))
+    (make-interval (- c d) (+ c d))
+  )
+)
+(define (center i)
+  (/ (+ (lower-bound i) (upper-bound i)) 2))
+(define (percent i)
+  (* 100.0 (/ (/ (- (upper-bound i) (lower-bound i)) 2) (center i))))
+
+
+; Exercise 2.13
+; Show that under the assumption of small percentage tolerances,
+; there is a simple formula for the approximate percentage tolerance of the product
+; of two intervals in terms of the tolerances of the factors.
+; You may simplify the problem by assuming that all numbers are positive.
 
 
 
