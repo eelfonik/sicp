@@ -33,12 +33,12 @@ x
 *Compound procedure* 的好处是，你自己定义的procedure跟语言内置的procedure可以毫无差别地使用， 例如上面这一行里的`square`以及`square_sum`.
 
 ##### 运行compound procedure的步骤， 例如 `(f 5)`: 
-- **=> applicative-order evaluation (evaluate then apply):**
+- **=> applicative-order evaluation (evaluate then apply, or, call by value):**
 1. 找到这个procedure的body，然后代入supply的argument => body是`(square_sum (+ a 1) (* a 2))`， 代入`5`, 得到`(square_sum 6 10)`
 2. 然后在env里找到`square_sum`这个procedure的body, `(+ (square x) (square y))`, 代入上一步的`6`和`10`， 变成`(+ (square 6) (square 10))`
 3. 继续在env里找到`square`这个procedure的body, `( * x x)`, 再次substitute => 变为`(+ (* 6 6) (* 10 10))`
 4. 下一步是找到内置的`*`这个procedure, 再substitue => 变为`(+ 36 100)` =>最后得到结果136
-- **=> normal-order evaluation (fully expand then reduce):**
+- **=> normal-order evaluation (fully expand then reduce, or, call by name):**
 1. 先全部展开 =>
 ```scheme
 (square_sum(+ 5 1) (* 5 2))
@@ -47,7 +47,11 @@ x
 ```
 2. 然后当展开到最后只剩primitive procedure的时候，一起计算
 
-Lisp采用第一种**applicative-order**，因为可见第二种有可能需要重复计算
+Lisp采用第一种**applicative-order**
+
+- 因为可见第二种有可能需要重复计算
+- 但第二种可以避免计算不必要的arguments.
+- 考虑到termination, 只要在applicative-order evaluation中可以termination的procedure,就一定可以在normal-order evaluation中terminate,反过来则不成立。
 
 这一过程称为 *substitution model for procedure application* .
 
