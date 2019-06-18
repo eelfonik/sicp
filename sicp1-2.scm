@@ -5,6 +5,7 @@
 		x
 		))
 
+; tail recursion ?
 (define (factorial1 x)
 	(define (factorial_iter product counter)
 		(if (> counter x)

@@ -57,9 +57,11 @@
 	(/ (+ (/ x (* guess guess)) (* 2 guess)) 3))
 
 ;better sqrt with local names & internal definitions
+;To avoid the problem with extreme small or large numbers
+;we could divide the abs value of (square guess - x) by x itself
 (define (sqrt x)
   (define (good-enough? guess)
-    (< (abs (- (square guess) x)) 0.001))
+    (< (/ (abs (- (square guess) x)) x) 0.001))
   (define (improve guess)
     (average guess (/ x guess)))
   (define (sqrt-iter guess)

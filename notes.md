@@ -173,7 +173,7 @@ It’s bad. And as the procedure call itself not as the top expression 2 times, 
 )
 ```
 
-TODO: 所以我们需要一个interpreter让人可以用第一种形式写代码，但实际运算中采用iterative process以便减少空间和时间复杂度？
+TODO: 所以我们需要一个interpreter让人可以用第一种形式写代码，但实际运算中采用iterative process以便减少空间和时间复杂度？-> 比如让interpreter reuse function's stack frame, 或者说,tail recursion 
 
 great prove about Exercise 1.13 http://www.billthelizard.com/2009/12/sicp-exercise-113-fibonacci-and-golden.html
 
