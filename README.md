@@ -8,4 +8,5 @@
 
 
 ### The learning notes
-[This note](notes.md) is taken along when going through the book. Contains some Chinese, don't be scared.
+- [Chapter 1: Abstraction of **procedure**](note1.md)
+- [Chapter 2: Abstraction of **data**](note2.md)

@@ -1,7 +1,7 @@
 body {
-  font-family: Avenir, Helvetica, arial, sans-serif;
+  font-family: 'Helvetica neue', Avenir, arial, sans-serif;
   font-size: 16px;
-  line-height: 1.6;
+  line-height: 1.8;
   padding-top: 10px;
   padding-bottom: 10px;
   color: rgba(238, 238, 238, 0.91);
@@ -34,19 +34,44 @@ h1, h2, h3, h4, h5, h6 {
   cursor: text;
   position: relative; }
 
-h1, h2 {
+h1 {
   color: #E2DDDD;
   margin: 25px 0;
-}
-h3, h4 {
-  color: #6BDAEF;
-  margin: 20px 0;
+  font-size: 30px;
+  text-align: center;
 }
 
-h5, h6 {
-  margin: 15px 0;
-  color: #D02862;
+h2 {
+  color: #E2DDDD;
+  margin: 20px 0;
+  font-size: 26px;
+  border-bottom: 1px solid #E2DDDD;
 }
+
+h3 {
+  color: #6BDAEF;
+  margin: 18px 0;
+  font-size: 22px; 
+}
+
+h4 {
+  color: #34bc9d;
+  margin: 15px 0;
+  font-size: 18px; 
+}
+
+h5 {
+  margin: 12px 0;
+  color: #F78733;
+  font-size: 16px; 
+}
+
+h6 {
+  margin: 10px 0;
+  color: #D02862;
+  font-size: 16px;
+}
+
 
 u {
   text-decoration: #B8D4A5 wavy underline;
@@ -73,27 +98,6 @@ h5 tt, h5 code {
 
 h6 tt, h6 code {
   font-size: inherit; }
-
-h1 {
-  font-size: 30px;
-}
-
-h2 {
-  font-size: 26px;
-  border-bottom: 1px solid #cccccc;
-}
-
-h3 {
-  font-size: 22px; }
-
-h4 {
-  font-size: 18px; }
-
-h5 {
-  font-size: 16px; }
-
-h6 {
-  font-size: 16px; }
 
 p, blockquote, ul, ol, dl, li, table, pre {
   margin: 15px 0; }

@@ -1,0 +1,16 @@
+2020.12.20 11:54:40 INFO  Started: Metals version 0.9.8 in workspace '/Users/kino/code-notes/sicp' for client vscode.
+2020.12.20 11:54:40 INFO  time: initialize in 0.59s
+2020.12.20 11:54:41 WARN  Build server is not auto-connectable.
+2020.12.20 11:54:41 WARN  no build tool detected in workspace '/Users/kino/code-notes/sicp'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. 
+Dec 20, 2020 11:55:54 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
+Dec 20, 2020 11:55:55 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
+2021.01.01 22:05:17 INFO  Started: Metals version 0.9.8 in workspace '/Users/kino/code-notes/sicp' for client vscode.
+2021.01.01 22:05:19 INFO  time: initialize in 2.15s
+2021.01.01 22:05:28 WARN  Build server is not auto-connectable.
+2021.01.01 22:05:28 WARN  no build tool detected in workspace '/Users/kino/code-notes/sicp'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. 
+2021.01.03 23:02:43 INFO  Started: Metals version 0.9.8 in workspace '/Users/kino/code-notes/sicp' for client vscode.
+2021.01.03 23:02:44 INFO  time: initialize in 1.37s
+2021.01.03 23:02:51 WARN  Build server is not auto-connectable.
+2021.01.03 23:02:51 WARN  no build tool detected in workspace '/Users/kino/code-notes/sicp'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. 
